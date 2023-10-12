@@ -1,5 +1,5 @@
 function getTotalBooksCount(books) {
-  return books.length;
+  return books.reduce((total, book) => total + 1, 0);
 }
 
 function getTotalAccountsCount(accounts) {
@@ -7,12 +7,7 @@ function getTotalAccountsCount(accounts) {
 }
 
 function getBooksBorrowedCount(books) {
-  let borrowedBooks = 0;
-
-  books.forEach(book => {
-    if (!book.borrows[0].returned) borrowedBooks++;
-  });
-  return borrowedBooks;
+  return books.filter(isBookBorrowed).length;
 }
 
 function getMostCommonGenres(books) {
@@ -61,25 +56,11 @@ function getMostPopularAuthors(books, authors) {
   return result.sort((a, b) => b.count - a.count).slice(0, 5);
 }
 
-//helper function 
-function countGenres(books) {
-  let map = {};
-  books.forEach((book) => {
-    if (map[book.genre]) {
-      map[book.genre]++;
-    } else {
-      map[book.genre] = 1;
-    }
-  });
-  return Object.entries(map)
-    .map(([name, count]) => {
-      return {
-        name,
-        count
-      };
-    })
-    .sort((a, b) => b.count - a.count);
-}
+//helper function for getBooksBorrowedCount
+function isBookBorrowed(book) {
+  return !book.borrows[0].returned;
+} 
+
 
 
 module.exports = {
